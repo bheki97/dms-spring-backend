@@ -16,7 +16,7 @@ public class DisasterReportEntity {
     private long reportId;
     @OneToOne
     @JoinColumn(name = "technician_id")
-    private UserEntity technician;
+    private TechnicianEntity technician;
     @Column(name = "report_date",nullable = false)
     private Timestamp reportDate;
     @Column(name = "delegation_date")

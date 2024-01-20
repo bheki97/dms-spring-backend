@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 @Data
 public class DisasterReportDto {
     private long disasterReportId;
-    private long technicianId;
+    private TechnicianDto technicianDto;
     private Timestamp reportDate;
     private Timestamp delegationDate;
     private Timestamp technicianAttendDate;

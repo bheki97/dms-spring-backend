@@ -3,8 +3,10 @@ package com.bheki97.dmsspringbackend.service.disasterentitymanager.impl;
 import com.bheki97.dmsspringbackend.dto.DisasterEntityDto;
 import com.bheki97.dmsspringbackend.dto.DisasterReportDto;
 import com.bheki97.dmsspringbackend.dto.ReporterDto;
+import com.bheki97.dmsspringbackend.dto.TechnicianDto;
 import com.bheki97.dmsspringbackend.entity.DisasterEntity;
 import com.bheki97.dmsspringbackend.entity.DisasterReportEntity;
+import com.bheki97.dmsspringbackend.entity.TechnicianEntity;
 import com.bheki97.dmsspringbackend.entity.UserEntity;
 import com.bheki97.dmsspringbackend.exception.DMSException;
 import com.bheki97.dmsspringbackend.service.disasterentitymanager.DisasterEntityManager;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.List;
 
@@ -40,7 +43,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
         if(
                 dto.getReporter().getReporterId()<1
-                ||dto.getReportDto().getTechnicianId()<1
+                ||dto.getReportDto().getTechnicianDto().getTechnicianId()<1
                 ||dto.getType()==null
                 ||dto.getDisasterDesc()==null||dto.getDisasterDesc().isEmpty()
                 ||dto.getLatitude()==null||dto.getLatitude().isEmpty()
@@ -61,13 +64,17 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         entity.setLongitude(dto.getLongitude());
 
         DisasterReportEntity reportEntity = new DisasterReportEntity();
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserId(dto.getReportDto().getTechnicianId());
-        reportEntity.setTechnician(userEntity);
+        reportEntity.setReportDate(new Timestamp(System.currentTimeMillis()));
+        if(dto.getReportDto()!=null && dto.getReportDto().getTechnicianDto()!=null){
+            TechnicianEntity technicianEntity = new TechnicianEntity();
+            technicianEntity.setUserId(dto.getReportDto().getTechnicianDto().getUserId());
+            technicianEntity.setUserId(dto.getReportDto().getTechnicianDto().getTechnicianId());
+            reportEntity.setTechnician(technicianEntity);
+        }
         entity.setReportEntity(reportEntity);
 
 
-        userEntity = new UserEntity();
+        UserEntity userEntity = new UserEntity();
         userEntity.setUserId(dto.getReporter().getReporterId());
         entity.setReporter(userEntity);
 
@@ -123,7 +130,25 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         reportDto.setReportDate(reportEntity.getReportDate());
         reportDto.setTechnicianAttendDate(reportEntity.getTechnicianAttendDate());
         reportDto.setCompleteDate(reportEntity.getCompleteDate());
-        reportDto.setTechnicianId(reportEntity.getTechnician().getUserId());
+
+        //initialize Technician
+        if(reportEntity.getTechnician()!=null){
+            TechnicianDto technicianDto = new TechnicianDto();
+            TechnicianEntity technician = reportEntity.getTechnician();
+            technicianDto.setUserId(technician.getUserId());
+            technicianDto.setTechnicianId(technician.getTechnicianId());
+            technicianDto.setFirstname(technician.getFirstname());
+            technicianDto.setLastname(technician.getLastname());
+            technicianDto.setEmail(technician.getEmail());
+            technicianDto.setCellNo(technician.getCellNo());
+
+            technicianDto.setDeptID(technician.getDepartment().getDeptId());
+            technicianDto.setDeptName(technician.getDepartment().getDeptName());
+            technicianDto.setSpecId(technician.getSpeciality().getSpecId());
+            technicianDto.setSpecName(technician.getSpeciality().getSpecName());
+
+            reportDto.setTechnicianDto(technicianDto);
+        }
         dto.setReportDto(reportDto);
 
 

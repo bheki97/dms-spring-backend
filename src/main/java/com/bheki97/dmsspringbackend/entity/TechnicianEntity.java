@@ -8,13 +8,13 @@ import lombok.Data;
 @Table(name = "technicians")
 public class TechnicianEntity extends UserEntity{
 
-    @Column(name = "technician_id")
+    @Column(name = "technician_id",unique = true)
     private long technicianId;
     @ManyToOne
     @JoinColumn(name = "dept_id")
     private DepartmentEntity department;
     @ManyToOne
-    @JoinColumn(name = "dept_id")
+    @JoinColumn(name = "spec_id")
     private SpecialityEntity speciality;
 
 }
