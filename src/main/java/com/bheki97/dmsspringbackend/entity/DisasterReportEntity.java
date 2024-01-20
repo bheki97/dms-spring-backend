@@ -13,7 +13,7 @@ public class DisasterReportEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private String reportId;
+    private long reportId;
     @OneToOne
     @JoinColumn(name = "technician_id")
     private UserEntity technician;

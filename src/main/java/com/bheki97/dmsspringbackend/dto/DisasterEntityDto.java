@@ -3,8 +3,6 @@ package com.bheki97.dmsspringbackend.dto;
 import com.bheki97.dmsspringbackend.enums.DisasterType;
 import lombok.Data;
 
-import java.io.File;
-import java.sql.Timestamp;
 
 @Data
 public class DisasterEntityDto {
@@ -14,15 +12,11 @@ public class DisasterEntityDto {
     private DisasterType type;
     private String longitude;
     private String latitude;
-    private File imgFile;
+    private String imgFileName;
+    private String imgFileContent;
 
 
     //disaster Report Fields
-    private long reportId;
-    private long reporterId;
-    private long technicianId;
-    private Timestamp reportDate;
-    private Timestamp delegationDate;
-    private Timestamp technicianAttendDate;
-    private Timestamp completeDate;
+    private ReporterDto reporter;
+    private DisasterReportDto reportDto;
 }

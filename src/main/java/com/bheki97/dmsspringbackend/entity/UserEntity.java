@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class UserEntity {
 
     @Id
