@@ -18,6 +18,7 @@ public class DepartmentEntityController {
 
     @PostMapping("/add-dept")
     public DepartmentEntity addDepartment(@RequestBody DepartmentEntity dept){
+        System.out.println(dept.getDeptName() + " " + " " + dept.isActive()+ dept.getDeptId());
         return departmentEntityManger.addNewDepartment(dept);
     }
 

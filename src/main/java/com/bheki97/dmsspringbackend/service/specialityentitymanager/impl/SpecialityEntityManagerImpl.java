@@ -27,7 +27,7 @@ public class SpecialityEntityManagerImpl implements SpecialityEntityManager {
 
         entity.setActive(true);
         entity.setSpecId(-1);
-        return null;
+        return specRepository.save(entity);
     }
 
     @Override
