@@ -9,4 +9,5 @@ public interface DepartmentEntityRepository extends JpaRepository<DepartmentEnti
 
     List<DepartmentEntity> findAllByActive(boolean active);
     boolean existsByDeptName(String name);
+
 }
