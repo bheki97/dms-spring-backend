@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @RestController
-@RequestMapping("/disaster")
+@RequestMapping("/api/disaster")
 public class DisasterEntityManagerController {
 
     @Autowired
@@ -20,9 +20,8 @@ public class DisasterEntityManagerController {
 
     @PostMapping
     public DisasterEntityDto reportNewDisaster(@RequestBody DisasterEntityDto dto){
-        System.out.println(dto);
-
-        return dto;
+//        System.out.println(dto);
+        return disasterEntityManager.reportNewDisaster(dto);
     }
 
     @GetMapping("/test")

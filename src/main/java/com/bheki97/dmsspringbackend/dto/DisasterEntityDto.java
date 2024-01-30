@@ -1,7 +1,7 @@
 package com.bheki97.dmsspringbackend.dto;
 
 import com.bheki97.dmsspringbackend.enums.DisasterType;
-import lombok.Data;
+import lombok.Data; 
 
 
 @Data

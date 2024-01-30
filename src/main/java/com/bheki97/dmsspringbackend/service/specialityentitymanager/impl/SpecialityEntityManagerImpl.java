@@ -24,9 +24,13 @@ public class SpecialityEntityManagerImpl implements SpecialityEntityManager {
         if(specRepository.existsBySpecName(entity.getSpecName())){
             throw new DMSException("Speciality with the same name exists");
         }
+        if(entity.getSpecId()!=0){
+            throw new DMSException("Invalid Speciality Id");
+        }
 
         entity.setActive(true);
-        entity.setSpecId(-1);
+
+
         return specRepository.save(entity);
     }
 

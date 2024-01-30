@@ -15,7 +15,7 @@ public class DisasterReportEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long reportId;
     @OneToOne
-    @JoinColumn(name = "technician_id")
+    @JoinColumn(name = "technician_id",referencedColumnName = "technician_id")
     private TechnicianEntity technician;
     @Column(name = "report_date",nullable = false)
     private Timestamp reportDate;

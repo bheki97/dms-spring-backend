@@ -24,11 +24,11 @@ public class DepartmentEntityManagerImpl implements DepartmentEntityManger {
             throw new DMSException("Department with the same name exists");
         }
 
+        if(entity.getDeptId() != 0){
+            throw new DMSException("Invalid department Id");
+        }
 
         entity.setActive(true);
-        entity.setDeptId(-1);
-
-
 
         return deptRepository.save(entity);
     }

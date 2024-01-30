@@ -2,6 +2,7 @@ package com.bheki97.dmsspringbackend.service.disasterentitymanager.impl;
 
 import com.bheki97.dmsspringbackend.dto.DisasterEntityDto;
 import com.bheki97.dmsspringbackend.dto.DisasterReportDto;
+
 import com.bheki97.dmsspringbackend.dto.ReporterDto;
 import com.bheki97.dmsspringbackend.dto.TechnicianDto;
 import com.bheki97.dmsspringbackend.entity.DisasterEntity;
@@ -9,7 +10,10 @@ import com.bheki97.dmsspringbackend.entity.DisasterReportEntity;
 import com.bheki97.dmsspringbackend.entity.TechnicianEntity;
 import com.bheki97.dmsspringbackend.entity.UserEntity;
 import com.bheki97.dmsspringbackend.exception.DMSException;
+import com.bheki97.dmsspringbackend.repository.DisasterEntityRepository;
 import com.bheki97.dmsspringbackend.service.disasterentitymanager.DisasterEntityManager;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,6 +26,8 @@ import java.util.List;
 @Service
 public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
+    @Autowired
+    private DisasterEntityRepository entityRepository;
 
 
     @Override
@@ -31,7 +37,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
         DisasterEntity entity = translateNewDtoToEntity(dto);
 
-        return translateEntityToDto(entity);
+        return translateEntityToDto(entityRepository.save(entity));
     }
 
     @Override
@@ -43,7 +49,6 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
         if(
                 dto.getReporter().getReporterId()<1
-                ||dto.getReportDto().getTechnicianDto().getTechnicianId()<1
                 ||dto.getType()==null
                 ||dto.getDisasterDesc()==null||dto.getDisasterDesc().isEmpty()
                 ||dto.getLatitude()==null||dto.getLatitude().isEmpty()
@@ -78,9 +83,11 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         userEntity.setUserId(dto.getReporter().getReporterId());
         entity.setReporter(userEntity);
 
+        if(dto.getImgFileContent()!=null && !dto.getImgFileContent().isEmpty()){
+            String imgPath = saveImageToFolder(dto.getImgFileName(),dto.getImgFileContent());
+            entity.setImgPath(imgPath);
+        }
 
-        String imgPath = saveImageToFolder(dto.getImgFileName(),dto.getImgFileContent());
-        entity.setImgPath(imgPath);
 
 
 
@@ -90,14 +97,19 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
     private String saveImageToFolder(String imgFileName,String imgFileContent) {
 
 
-        Path path = Path.of("resources","static","disaster-images",+System.currentTimeMillis() +imgFileName);
-
+        Path path = Path.of("src","main","resources","static","disaster-images",+System.currentTimeMillis() +"-"+imgFileName);
+        System.out.println(path.toAbsolutePath());
         try {
+            path = path.toAbsolutePath();
+            Files.createFile(path);
+
+
             Files.write(path,Base64.getDecoder().decode(imgFileContent));
             return path.getFileName().toString();
 
         } catch (IOException e) {
-            throw new DMSException("image content invalid");
+            e.printStackTrace();
+            throw new DMSException("image content invalid: "+e.getMessage());
         }
 
 
@@ -163,7 +175,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
     private String getBase64ImgContent(String imgPath) {
 
-        Path path = Path.of("resources","static","disaster-images",imgPath);
+        Path path = Path.of("src","main","resources","static","disaster-images",imgPath);
         try {
             byte[] bytes = Files.readAllBytes(path);
             return Base64.getEncoder().encodeToString(bytes);
