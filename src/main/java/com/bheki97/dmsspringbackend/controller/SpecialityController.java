@@ -7,15 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/speciality")
+@RequestMapping("/api/speciality")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class SpecialityController {
 
     @Autowired
     SpecialityEntityManagerImpl specialityEntityManager;
 
-    @PostMapping("/add-spec")
-    public SpecialityEntity addSpeciality(@RequestBody SpecialityEntity speciality){
+    @PostMapping
+    public SpecialityEntity[] addSpeciality(@RequestBody SpecialityEntity speciality){
         return specialityEntityManager.addNewSpeciality(speciality);
+    }
+    @GetMapping
+    public SpecialityEntity[] getAllSpecialities(){
+
+        return specialityEntityManager.getAllSpeciality();
     }
 
 }

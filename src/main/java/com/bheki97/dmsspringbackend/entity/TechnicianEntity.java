@@ -9,6 +9,7 @@ import lombok.Data;
 public class TechnicianEntity extends UserEntity{
 
     @Column(name = "technician_id",unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long technicianId;
     @ManyToOne
     @JoinColumn(name = "dept_id")

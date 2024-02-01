@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SpecialityEntityManager {
 
-    SpecialityEntity addNewSpeciality(SpecialityEntity entity);
-    List<SpecialityEntity> getAllSpeciality();
-    List<SpecialityEntity> getAllActiveSpeciality();
+    SpecialityEntity[] addNewSpeciality(SpecialityEntity entity);
+    SpecialityEntity[] getAllSpeciality();
+    SpecialityEntity[] getAllActiveSpeciality();
 }

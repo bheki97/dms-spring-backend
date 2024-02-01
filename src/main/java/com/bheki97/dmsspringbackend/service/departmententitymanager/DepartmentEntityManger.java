@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface DepartmentEntityManger {
 
-    DepartmentEntity addNewDepartment(DepartmentEntity entity);
-    List<DepartmentEntity> getAllDepartment();
-    List<DepartmentEntity> getAllActiveDepartment();
+    DepartmentEntity[] addNewDepartment(DepartmentEntity entity);
+    DepartmentEntity[] getAllDepartment();
+    DepartmentEntity[] getAllActiveDepartment();
 }

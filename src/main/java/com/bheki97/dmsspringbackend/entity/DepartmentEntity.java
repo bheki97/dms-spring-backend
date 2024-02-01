@@ -2,10 +2,12 @@ package com.bheki97.dmsspringbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Data
 @Entity
 @Table(name = "departments")
+
 public class DepartmentEntity {
 
     @Id

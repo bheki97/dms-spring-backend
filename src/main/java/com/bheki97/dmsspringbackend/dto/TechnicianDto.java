@@ -11,7 +11,7 @@ public class TechnicianDto {
     private String lastname;
     private String email;
     private String cellNo;
-    private long deptID;
+    private long deptId;
     private long specId;
     private String deptName;
     private String specName;

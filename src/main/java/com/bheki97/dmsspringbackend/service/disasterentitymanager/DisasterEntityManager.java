@@ -8,5 +8,5 @@ import java.util.List;
 public interface DisasterEntityManager {
 
     DisasterEntityDto reportNewDisaster(DisasterEntityDto entity);
-    List<DisasterEntityDto> getAllDisasters();
+    DisasterEntityDto[] getAllDisasters();
 }

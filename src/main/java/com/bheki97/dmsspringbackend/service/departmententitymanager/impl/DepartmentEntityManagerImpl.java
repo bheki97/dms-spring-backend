@@ -15,7 +15,7 @@ public class DepartmentEntityManagerImpl implements DepartmentEntityManger {
     @Autowired
     private DepartmentEntityRepository deptRepository;
     @Override
-    public DepartmentEntity addNewDepartment(DepartmentEntity entity) {
+    public DepartmentEntity[] addNewDepartment(DepartmentEntity entity) {
         if(entity.getDeptName()==null ||entity.getDeptName().isEmpty()){
             throw new DMSException("Cannot have empty fields");
         }
@@ -29,17 +29,23 @@ public class DepartmentEntityManagerImpl implements DepartmentEntityManger {
         }
 
         entity.setActive(true);
-
-        return deptRepository.save(entity);
+        deptRepository.save(entity);
+        return getAllDepartment();
     }
 
     @Override
-    public List<DepartmentEntity> getAllDepartment() {
-        return deptRepository.findAll();
+    public DepartmentEntity[] getAllDepartment() {
+
+        List<DepartmentEntity> list = deptRepository.findAll();
+        DepartmentEntity[] arr = new DepartmentEntity[list.size()];
+
+        return list.toArray(arr);
     }
 
     @Override
-    public List<DepartmentEntity> getAllActiveDepartment() {
-        return deptRepository.findAllByActive(true);
-    }
+    public DepartmentEntity[] getAllActiveDepartment() {
+        List<DepartmentEntity> list = deptRepository.findAllByActive(true);
+        DepartmentEntity[] arr = new DepartmentEntity[list.size()];
+
+        return list.toArray(arr);}
 }

@@ -41,8 +41,11 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
     }
 
     @Override
-    public List<DisasterEntityDto> getAllDisasters() {
-        return null;
+    public DisasterEntityDto[] getAllDisasters() {
+        List<DisasterEntityDto> list = entityRepository.findAll()
+                .stream().map(this::translateEntityToDto).toList();
+        DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
+        return list.toArray(arr);
     }
 
     private void validateNewDisaster(DisasterEntityDto dto) {
@@ -154,7 +157,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
             technicianDto.setEmail(technician.getEmail());
             technicianDto.setCellNo(technician.getCellNo());
 
-            technicianDto.setDeptID(technician.getDepartment().getDeptId());
+            technicianDto.setDeptId(technician.getDepartment().getDeptId());
             technicianDto.setDeptName(technician.getDepartment().getDeptName());
             technicianDto.setSpecId(technician.getSpeciality().getSpecId());
             technicianDto.setSpecName(technician.getSpeciality().getSpecName());

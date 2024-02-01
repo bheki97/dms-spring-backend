@@ -16,7 +16,7 @@ public class SpecialityEntityManagerImpl implements SpecialityEntityManager {
     private SpecialityEntityRepository specRepository;
 
     @Override
-    public SpecialityEntity addNewSpeciality(SpecialityEntity entity) {
+    public SpecialityEntity[] addNewSpeciality(SpecialityEntity entity) {
         if(entity.getSpecName()==null ||entity.getSpecName().isEmpty()){
             throw new DMSException("Cannot have empty fields");
         }
@@ -29,18 +29,23 @@ public class SpecialityEntityManagerImpl implements SpecialityEntityManager {
         }
 
         entity.setActive(true);
+        specRepository.save(entity);
 
-
-        return specRepository.save(entity);
+        return getAllSpeciality();
     }
 
     @Override
-    public List<SpecialityEntity> getAllSpeciality() {
-        return specRepository.findAll();
+    public SpecialityEntity[] getAllSpeciality() {
+       List<SpecialityEntity> list = specRepository.findAll();
+       SpecialityEntity[] arr = new SpecialityEntity[list.size()];
+
+        return list.toArray(arr);
     }
 
     @Override
-    public List<SpecialityEntity> getAllActiveSpeciality() {
-        return specRepository.findAllByActive(true);
+    public SpecialityEntity[] getAllActiveSpeciality() {
+
+
+        return (SpecialityEntity[]) specRepository.findAllByActive(true).toArray();
     }
 }

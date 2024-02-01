@@ -24,6 +24,11 @@ public class DisasterEntityManagerController {
         return disasterEntityManager.reportNewDisaster(dto);
     }
 
+    @GetMapping
+    public DisasterEntityDto[] getAllDisasters(){
+        return disasterEntityManager.getAllDisasters();
+    }
+
     @GetMapping("/test")
     public String getPath() throws IOException {
         ResourceLoader resourceLoader = new PathMatchingResourcePatternResolver();
