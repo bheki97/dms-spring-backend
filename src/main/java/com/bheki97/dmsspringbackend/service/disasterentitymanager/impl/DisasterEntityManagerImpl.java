@@ -53,6 +53,21 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
     }
 
     @Override
+    public DisasterEntityDto[] getDisastersAssignToTechnician(long technicianId) {
+
+        if(!technicianEntityRepository.existsByTechnicianId(technicianId)){
+            throw new DMSException("Technician Does not Exist");
+        }
+
+        List<DisasterEntityDto> list = entityRepository
+                .findAllByReportEntityTechnicianTechnicianId(technicianId).stream()
+                .map(this::translateEntityToDto).toList();
+        DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
+
+        return list.toArray(arr);
+    }
+
+    @Override
     public boolean AssignTechnicianToDisaster(AssignTechnicianDto dto) {
 
         if(!reportEntityRepository.existsById(dto.getReportId())){

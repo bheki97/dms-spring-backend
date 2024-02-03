@@ -32,6 +32,11 @@ public class DisasterEntityManagerController {
         return disasterEntityManager.AssignTechnicianToDisaster(dto);
     }
 
+    @GetMapping("/technician/{technicianId}")
+    public DisasterEntityDto[] getAllDisastersOfTechnician(@PathVariable long technicianId){
+        return disasterEntityManager.getDisastersAssignToTechnician(technicianId);
+    }
+
 
     @GetMapping
     public DisasterEntityDto[] getAllReportedDisaster(){
