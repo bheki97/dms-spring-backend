@@ -1,8 +1,10 @@
 package com.bheki97.dmsspringbackend.controller;
 
 
+import com.bheki97.dmsspringbackend.dto.AssignTechnicianDto;
 import com.bheki97.dmsspringbackend.dto.DisasterEntityDto;
 import com.bheki97.dmsspringbackend.service.disasterentitymanager.DisasterEntityManager;
+import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/disaster")
@@ -24,8 +27,14 @@ public class DisasterEntityManagerController {
         return disasterEntityManager.reportNewDisaster(dto);
     }
 
+    @PostMapping("/assign-tech")
+    public boolean assignTechnician(@RequestBody AssignTechnicianDto dto){
+        return disasterEntityManager.AssignTechnicianToDisaster(dto);
+    }
+
+
     @GetMapping
-    public DisasterEntityDto[] getAllDisasters(){
+    public DisasterEntityDto[] getAllReportedDisaster(){
         return disasterEntityManager.getAllDisasters();
     }
 

@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TechnicianEntityRepository extends JpaRepository<TechnicianEntity , Long> {
     boolean existsByEmail(String email);
+    boolean existsByTechnicianId(long id);
+    TechnicianEntity findByTechnicianId(long id);
 
 }

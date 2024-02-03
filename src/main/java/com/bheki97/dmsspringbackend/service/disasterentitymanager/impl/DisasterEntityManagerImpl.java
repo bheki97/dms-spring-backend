@@ -1,16 +1,15 @@
 package com.bheki97.dmsspringbackend.service.disasterentitymanager.impl;
 
-import com.bheki97.dmsspringbackend.dto.DisasterEntityDto;
-import com.bheki97.dmsspringbackend.dto.DisasterReportDto;
+import com.bheki97.dmsspringbackend.dto.*;
 
-import com.bheki97.dmsspringbackend.dto.ReporterDto;
-import com.bheki97.dmsspringbackend.dto.TechnicianDto;
 import com.bheki97.dmsspringbackend.entity.DisasterEntity;
 import com.bheki97.dmsspringbackend.entity.DisasterReportEntity;
 import com.bheki97.dmsspringbackend.entity.TechnicianEntity;
 import com.bheki97.dmsspringbackend.entity.UserEntity;
 import com.bheki97.dmsspringbackend.exception.DMSException;
 import com.bheki97.dmsspringbackend.repository.DisasterEntityRepository;
+import com.bheki97.dmsspringbackend.repository.DisasterReportEntityRepository;
+import com.bheki97.dmsspringbackend.repository.TechnicianEntityRepository;
 import com.bheki97.dmsspringbackend.service.disasterentitymanager.DisasterEntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,10 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
     @Autowired
     private DisasterEntityRepository entityRepository;
+    @Autowired
+    private DisasterReportEntityRepository reportEntityRepository;
+    @Autowired
+    private TechnicianEntityRepository technicianEntityRepository;
 
 
     @Override
@@ -42,10 +45,34 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
     @Override
     public DisasterEntityDto[] getAllDisasters() {
+
         List<DisasterEntityDto> list = entityRepository.findAll()
                 .stream().map(this::translateEntityToDto).toList();
-        DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
-        return list.toArray(arr);
+        DisasterEntityDto[] dto = new DisasterEntityDto[list.size()];
+        return list.toArray(dto);
+    }
+
+    @Override
+    public boolean AssignTechnicianToDisaster(AssignTechnicianDto dto) {
+
+        if(!reportEntityRepository.existsById(dto.getReportId())){
+            throw new DMSException("Disaster Report Does not exists!!");
+        }
+
+        if(!technicianEntityRepository.existsByTechnicianId(dto.getTechnicianId())){
+            throw new DMSException("You have choose non existing Technician");
+        }
+
+        TechnicianEntity technician = technicianEntityRepository.findByTechnicianId(dto.getTechnicianId());
+        DisasterReportEntity report = reportEntityRepository
+                .findById(dto.getReportId()).orElseThrow( ()-> new DMSException("Disaster Report Does not exists!!"));
+
+        report.setTechnician(technician);
+        report.setDelegationDate( new Timestamp(System.currentTimeMillis()));
+
+        reportEntityRepository.save(report);
+
+        return true;
     }
 
     private void validateNewDisaster(DisasterEntityDto dto) {
