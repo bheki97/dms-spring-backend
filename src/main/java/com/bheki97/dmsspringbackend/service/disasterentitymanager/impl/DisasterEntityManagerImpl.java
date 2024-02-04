@@ -68,7 +68,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
     }
 
     @Override
-    public boolean AssignTechnicianToDisaster(AssignTechnicianDto dto) {
+    public boolean assignTechnicianToDisaster(AssignTechnicianDto dto) {
 
         if(!reportEntityRepository.existsById(dto.getReportId())){
             throw new DMSException("Disaster Report Does not exists!!");
@@ -88,6 +88,61 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         reportEntityRepository.save(report);
 
         return true;
+    }
+
+    @Override
+    public boolean attendDisaster(long reportId) {
+
+        if(!reportEntityRepository.existsById(reportId)){
+            throw new DMSException("Disasters does not exist");
+        }
+        DisasterReportEntity reportEntity = reportEntityRepository
+                .findById(reportId)
+                .orElseThrow(() -> new DMSException("Disaster Does not exist"));
+
+        if(reportEntity.getTechnician()==null || reportEntity.getDelegationDate()==null){
+            throw new DMSException("You have not been delegated to attend this Disaster");
+        }
+        if(reportEntity.getCompleteDate()!=null){
+            throw new DMSException("Disaster have been resolved!!!");
+        }
+
+        reportEntity.setTechnicianAttendDate(new Timestamp(System.currentTimeMillis()));
+
+        reportEntityRepository.save(reportEntity);
+
+        return true;
+    }
+
+    @Override
+    public boolean notifyCompletion(long reportId) {
+
+        if(!reportEntityRepository.existsById(reportId)){
+            throw new DMSException("Disasters does not exist");
+        }
+
+        DisasterReportEntity reportEntity = reportEntityRepository
+                .findById(reportId)
+                .orElseThrow(() -> new DMSException("Disaster Does not exist"));
+
+        if(reportEntity.getDelegationDate()==null){
+            throw new DMSException("You have not been delegated to attend this Disaster");
+        }
+
+        if(reportEntity.getTechnicianAttendDate()==null){
+            throw new DMSException("You have not attended this Disaster");
+        }
+
+        if(reportEntity.getCompleteDate()!=null){
+            throw new DMSException("Disaster have been resolved!!!");
+        }
+        reportEntity.setCompleteDate(new Timestamp(System.currentTimeMillis()));
+        
+
+
+
+
+        return false;
     }
 
     private void validateNewDisaster(DisasterEntityDto dto) {
