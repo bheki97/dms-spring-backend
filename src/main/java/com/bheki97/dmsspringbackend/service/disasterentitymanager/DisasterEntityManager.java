@@ -9,6 +9,9 @@ public interface DisasterEntityManager {
     DisasterEntityDto reportNewDisaster(DisasterEntityDto entity);
     DisasterEntityDto[] getAllDisasters();
     DisasterEntityDto[] getAllMyReportedDisasters(long reporterId);
+    DisasterEntityDto[] getAllTechnicianActiveDisasters(long technicianId);
+    DisasterEntityDto[] getAlltechnicianCompletedDisasters(long technicianId);
+
 
     DisasterEntityDto[] getDisastersAssignToTechnician(long technicianId);
     boolean assignTechnicianToDisaster(AssignTechnicianDto dto);

@@ -4,6 +4,7 @@ import com.bheki97.dmsspringbackend.dto.TechnicianDto;
 import com.bheki97.dmsspringbackend.entity.DepartmentEntity;
 import com.bheki97.dmsspringbackend.entity.SpecialityEntity;
 import com.bheki97.dmsspringbackend.entity.TechnicianEntity;
+import com.bheki97.dmsspringbackend.entity.UserEntity;
 import com.bheki97.dmsspringbackend.exception.DMSException;
 import com.bheki97.dmsspringbackend.repository.DepartmentEntityRepository;
 import com.bheki97.dmsspringbackend.repository.SpecialityEntityRepository;
@@ -29,16 +30,19 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
     @Override
     public TechnicianDto[] newTechnician(TechnicianDto dto) {
         checkForNullAndEmptyField(dto);
-        if (technicianEntityRepository.existsByEmail(dto.getEmail())){
+        if (technicianEntityRepository.existsByUserEmail(dto.getEmail())){
             throw new DMSException( "This Email is already in use !");
         }
 
+
+
         DepartmentEntity department = departmentEntityRepository.findById(dto.getDeptId())
-                .orElseThrow(() -> new IllegalArgumentException("Department does not exists"));
+                .orElseThrow(() -> new DMSException("Department does not exists"));
         SpecialityEntity speciality = specialityEntityRepository.findById(dto.getSpecId())
-                .orElseThrow(() -> new IllegalArgumentException("specialityEntityRepository"));
+                .orElseThrow(() -> new DMSException("Department does not exists"));
 
         TechnicianEntity entity = createEntity(dto,department,speciality);
+        technicianEntityRepository.save(entity);
 
         return getAllTechnicians();
     }
@@ -56,17 +60,17 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
     private TechnicianDto toDto(TechnicianEntity entity) {
         TechnicianDto dto = new TechnicianDto();
 
-        dto.setUserId(dto.getUserId());
+        dto.setUserId(entity.getUser().getUserId());
+        dto.setCellNo(entity.getUser().getCellNo());
         dto.setTechnicianId(entity.getTechnicianId());
-        dto.setFirstname(dto.getFirstname());
-        dto.setLastname(dto.getLastname());
-        dto.setEmail(dto.getEmail());
-        dto.setCellNo(dto.getCellNo());
-        dto.setDeptId(dto.getDeptId());
-        dto.setDeptName(dto.getDeptName());
-        dto.setSpecId(dto.getSpecId());
-        dto.setSpecName(dto.getSpecName());
-
+        dto.setFirstname(entity.getUser().getFirstname());
+        dto.setLastname(entity.getUser().getLastname());
+        dto.setEmail(entity.getUser().getEmail());
+        dto.setDeptId(entity.getDepartment().getDeptId());
+        dto.setDeptName(entity.getDepartment().getDeptName());
+        dto.setSpecId(entity.getSpeciality().getSpecId());
+        dto.setSpecName(entity.getSpeciality().getSpecName());
+        System.out.println(dto);
         return dto;
     }
 
@@ -74,13 +78,16 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
         TechnicianEntity entity = new TechnicianEntity();
         entity.setDepartment(department);
         entity.setSpeciality(speciality);
-        entity.setEmail(dto.getEmail());
-        entity.setFirstname(dto.getFirstname());
-        entity.setLastname(dto.getLastname());
-        entity.setEmail(dto.getEmail());
-        entity.setCellNo(dto.getCellNo());
-        entity.setUserRole("technician");
-        entity.setPassword(generatePassword());
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(dto.getEmail());
+        userEntity.setFirstname(dto.getFirstname());
+        userEntity.setLastname(dto.getLastname());
+        userEntity.setEmail(dto.getEmail());
+        userEntity.setCellNo(dto.getCellNo());
+        userEntity.setUserRole("technician");
+        userEntity.setPassword(generatePassword());
+        entity.setUser(userEntity);
 
 
         return entity;

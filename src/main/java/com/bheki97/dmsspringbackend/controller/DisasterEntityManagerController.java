@@ -50,6 +50,20 @@ public class DisasterEntityManagerController {
         return disasterEntityManager.getAllMyReportedDisasters(reporterId);
     }
 
+    @GetMapping("/incomplete/{technicianId}")
+    public DisasterEntityDto[] getIncompleteTechnicianDisasters(@PathVariable long technicianId){
+        return disasterEntityManager.getAllTechnicianActiveDisasters(technicianId);
+    }
+    @GetMapping("/complete/{technicianId}")
+    public DisasterEntityDto[] getCompleteTechnicianDisasters(@PathVariable long technicianId){
+        return disasterEntityManager.getAlltechnicianCompletedDisasters(technicianId);
+    }
+
+    @GetMapping("/resolve/{reportId}")
+    public boolean resolveDisaster(@PathVariable long reportId){
+        return disasterEntityManager.notifyCompletion(reportId);
+    }
+
     @GetMapping("/test")
     public String getPath() throws IOException {
         ResourceLoader resourceLoader = new PathMatchingResourcePatternResolver();

@@ -9,4 +9,8 @@ public interface DisasterEntityRepository extends JpaRepository<DisasterEntity,L
 
     List<DisasterEntity> findAllByReportEntityTechnicianTechnicianId(long id);
     List<DisasterEntity> findAllByReporterUserId(long reporterId);
+
+    List<DisasterEntity> findAllByReportEntityTechnicianTechnicianIdAndReportEntityCompleteDateIsNull(long id);
+    List<DisasterEntity> findAllByReportEntityTechnicianTechnicianIdAndReportEntityCompleteDateIsNotNull(long id);
+
 }

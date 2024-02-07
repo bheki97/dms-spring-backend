@@ -13,6 +13,7 @@ import com.bheki97.dmsspringbackend.repository.TechnicianEntityRepository;
 import com.bheki97.dmsspringbackend.repository.UserEntityRepository;
 import com.bheki97.dmsspringbackend.service.disasterentitymanager.DisasterEntityManager;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -79,6 +80,35 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
         List<DisasterEntityDto> list = entityRepository
                 .findAllByReporterUserId(reporterId).stream()
+                .map(this::translateEntityToDto).toList();
+        DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
+
+        return list.toArray(arr);
+    }
+
+    @Override
+    public DisasterEntityDto[] getAllTechnicianActiveDisasters(long technicianId) {
+
+        if(!technicianEntityRepository.existsByTechnicianId(technicianId)){
+            throw new DMSException("Technician Does not Exist");
+        }
+
+        List<DisasterEntityDto> list = entityRepository
+                .findAllByReportEntityTechnicianTechnicianIdAndReportEntityCompleteDateIsNull(technicianId).stream()
+                .map(this::translateEntityToDto).toList();
+        DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
+
+        return list.toArray(arr);
+    }
+
+    @Override
+    public DisasterEntityDto[] getAlltechnicianCompletedDisasters(long technicianId) {
+        if(!technicianEntityRepository.existsByTechnicianId(technicianId)){
+            throw new DMSException("Technician Does not Exist");
+        }
+
+        List<DisasterEntityDto> list = entityRepository
+                .findAllByReportEntityTechnicianTechnicianIdAndReportEntityCompleteDateIsNotNull(technicianId).stream()
                 .map(this::translateEntityToDto).toList();
         DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
 
@@ -189,12 +219,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
         DisasterReportEntity reportEntity = new DisasterReportEntity();
         reportEntity.setReportDate(new Timestamp(System.currentTimeMillis()));
-        if(dto.getReportDto()!=null && dto.getReportDto().getTechnicianDto()!=null){
-            TechnicianEntity technicianEntity = new TechnicianEntity();
-            technicianEntity.setUserId(dto.getReportDto().getTechnicianDto().getUserId());
-            technicianEntity.setUserId(dto.getReportDto().getTechnicianDto().getTechnicianId());
-            reportEntity.setTechnician(technicianEntity);
-        }
+
         entity.setReportEntity(reportEntity);
 
 
@@ -267,12 +292,12 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         if(reportEntity.getTechnician()!=null){
             TechnicianDto technicianDto = new TechnicianDto();
             TechnicianEntity technician = reportEntity.getTechnician();
-            technicianDto.setUserId(technician.getUserId());
+            technicianDto.setUserId(technician.getUser().getUserId());
             technicianDto.setTechnicianId(technician.getTechnicianId());
-            technicianDto.setFirstname(technician.getFirstname());
-            technicianDto.setLastname(technician.getLastname());
-            technicianDto.setEmail(technician.getEmail());
-            technicianDto.setCellNo(technician.getCellNo());
+            technicianDto.setFirstname(technician.getUser().getFirstname());
+            technicianDto.setLastname(technician.getUser().getLastname());
+            technicianDto.setEmail(technician.getUser().getEmail());
+            technicianDto.setCellNo(technician.getUser().getCellNo());
 
             technicianDto.setDeptId(technician.getDepartment().getDeptId());
             technicianDto.setDeptName(technician.getDepartment().getDeptName());
