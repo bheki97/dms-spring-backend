@@ -45,6 +45,10 @@ public class DisasterEntityManagerController {
     public DisasterEntityDto[] getAllReportedDisaster(){
         return disasterEntityManager.getAllDisasters();
     }
+    @GetMapping("/{reporterId}")
+    public DisasterEntityDto[] getAllReportedDisasterById(@PathVariable long reporterId){
+        return disasterEntityManager.getAllMyReportedDisasters(reporterId);
+    }
 
     @GetMapping("/test")
     public String getPath() throws IOException {

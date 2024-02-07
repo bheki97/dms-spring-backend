@@ -8,6 +8,8 @@ public interface DisasterEntityManager {
 
     DisasterEntityDto reportNewDisaster(DisasterEntityDto entity);
     DisasterEntityDto[] getAllDisasters();
+    DisasterEntityDto[] getAllMyReportedDisasters(long reporterId);
+
     DisasterEntityDto[] getDisastersAssignToTechnician(long technicianId);
     boolean assignTechnicianToDisaster(AssignTechnicianDto dto);
     boolean attendDisaster(long reportId);

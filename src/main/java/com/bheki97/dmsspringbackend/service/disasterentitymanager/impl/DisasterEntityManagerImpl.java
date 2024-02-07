@@ -10,6 +10,7 @@ import com.bheki97.dmsspringbackend.exception.DMSException;
 import com.bheki97.dmsspringbackend.repository.DisasterEntityRepository;
 import com.bheki97.dmsspringbackend.repository.DisasterReportEntityRepository;
 import com.bheki97.dmsspringbackend.repository.TechnicianEntityRepository;
+import com.bheki97.dmsspringbackend.repository.UserEntityRepository;
 import com.bheki97.dmsspringbackend.service.disasterentitymanager.DisasterEntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
     @Autowired
     private DisasterEntityRepository entityRepository;
+
+    @Autowired
+    private UserEntityRepository userEntityRepository;
     @Autowired
     private DisasterReportEntityRepository reportEntityRepository;
     @Autowired
@@ -66,6 +70,21 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
 
         return list.toArray(arr);
     }
+    @Override
+    public DisasterEntityDto[] getAllMyReportedDisasters(long reporterId) {
+
+        if(!userEntityRepository.existsById(reporterId)){
+            throw new DMSException("User Does not Exist");
+        }
+
+        List<DisasterEntityDto> list = entityRepository
+                .findAllByReporterUserId(reporterId).stream()
+                .map(this::translateEntityToDto).toList();
+        DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
+
+        return list.toArray(arr);
+    }
+
 
     @Override
     public boolean assignTechnicianToDisaster(AssignTechnicianDto dto) {
@@ -240,6 +259,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         DisasterReportDto reportDto = new DisasterReportDto();
         reportDto.setDisasterReportId(reportEntity.getReportId());
         reportDto.setReportDate(reportEntity.getReportDate());
+        reportDto.setDelegationDate(reportEntity.getDelegationDate());
         reportDto.setTechnicianAttendDate(reportEntity.getTechnicianAttendDate());
         reportDto.setCompleteDate(reportEntity.getCompleteDate());
 
