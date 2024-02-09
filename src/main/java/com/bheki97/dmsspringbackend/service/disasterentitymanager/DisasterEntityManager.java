@@ -2,6 +2,7 @@ package com.bheki97.dmsspringbackend.service.disasterentitymanager;
 
 
 import com.bheki97.dmsspringbackend.dto.AssignTechnicianDto;
+import com.bheki97.dmsspringbackend.dto.CompleteDisasterDto;
 import com.bheki97.dmsspringbackend.dto.DisasterEntityDto;
 
 public interface DisasterEntityManager {
@@ -10,7 +11,7 @@ public interface DisasterEntityManager {
     DisasterEntityDto[] getAllDisasters();
     DisasterEntityDto[] getAllMyReportedDisasters(long reporterId);
     DisasterEntityDto[] getAllTechnicianActiveDisasters(long technicianId);
-    DisasterEntityDto[] getAlltechnicianCompletedDisasters(long technicianId);
+    CompleteDisasterDto[] getAllTechnicianCompletedDisasters(long technicianId);
 
 
     DisasterEntityDto[] getDisastersAssignToTechnician(long technicianId);

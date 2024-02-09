@@ -102,17 +102,32 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
     }
 
     @Override
-    public DisasterEntityDto[] getAlltechnicianCompletedDisasters(long technicianId) {
+    public CompleteDisasterDto[] getAllTechnicianCompletedDisasters(long technicianId) {
         if(!technicianEntityRepository.existsByTechnicianId(technicianId)){
             throw new DMSException("Technician Does not Exist");
         }
 
-        List<DisasterEntityDto> list = entityRepository
+        List<CompleteDisasterDto> list = entityRepository
                 .findAllByReportEntityTechnicianTechnicianIdAndReportEntityCompleteDateIsNotNull(technicianId).stream()
-                .map(this::translateEntityToDto).toList();
-        DisasterEntityDto[] arr = new DisasterEntityDto[list.size()];
+                .map(this::disasterEntityToCompleteDisasterDto).toList();
+        CompleteDisasterDto[] arr = new CompleteDisasterDto[list.size()];
 
         return list.toArray(arr);
+    }
+
+
+    private CompleteDisasterDto disasterEntityToCompleteDisasterDto(DisasterEntity entity){
+        CompleteDisasterDto dto = new CompleteDisasterDto();
+        DisasterReportEntity reportEntity  = entity.getReportEntity();
+
+
+        dto.setImgContent(getBase64ImgContent(entity.getImgPath()));
+        dto.setCompleteDate(reportEntity.getCompleteDate());
+        dto.setReportDate(reportEntity.getReportDate());
+        dto.setType(entity.getType());
+
+
+        return dto;
     }
 
 
@@ -186,12 +201,12 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
             throw new DMSException("Disaster have been resolved!!!");
         }
         reportEntity.setCompleteDate(new Timestamp(System.currentTimeMillis()));
-        
+        reportEntityRepository.save(reportEntity);
 
 
 
 
-        return false;
+        return true;
     }
 
     private void validateNewDisaster(DisasterEntityDto dto) {

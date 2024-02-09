@@ -2,6 +2,7 @@ package com.bheki97.dmsspringbackend.controller;
 
 
 import com.bheki97.dmsspringbackend.dto.AssignTechnicianDto;
+import com.bheki97.dmsspringbackend.dto.CompleteDisasterDto;
 import com.bheki97.dmsspringbackend.dto.DisasterEntityDto;
 import com.bheki97.dmsspringbackend.service.disasterentitymanager.DisasterEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +53,12 @@ public class DisasterEntityManagerController {
 
     @GetMapping("/incomplete/{technicianId}")
     public DisasterEntityDto[] getIncompleteTechnicianDisasters(@PathVariable long technicianId){
+
         return disasterEntityManager.getAllTechnicianActiveDisasters(technicianId);
     }
     @GetMapping("/complete/{technicianId}")
-    public DisasterEntityDto[] getCompleteTechnicianDisasters(@PathVariable long technicianId){
-        return disasterEntityManager.getAlltechnicianCompletedDisasters(technicianId);
+    public CompleteDisasterDto[] getCompleteTechnicianDisasters(@PathVariable long technicianId){
+        return disasterEntityManager.getAllTechnicianCompletedDisasters(technicianId);
     }
 
     @GetMapping("/resolve/{reportId}")
