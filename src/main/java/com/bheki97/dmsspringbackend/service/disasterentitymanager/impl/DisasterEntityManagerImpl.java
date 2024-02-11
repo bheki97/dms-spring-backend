@@ -231,6 +231,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         entity.setType(dto.getType());
         entity.setLatitude(dto.getLatitude());
         entity.setLongitude(dto.getLongitude());
+        entity.setLocation(dto.getLocation());
 
         DisasterReportEntity reportEntity = new DisasterReportEntity();
         reportEntity.setReportDate(new Timestamp(System.currentTimeMillis()));
@@ -282,6 +283,7 @@ public class DisasterEntityManagerImpl implements DisasterEntityManager {
         dto.setLatitude(entity.getLatitude());
         dto.setLongitude(entity.getLongitude());
         dto.setType(entity.getType());
+        dto.setLocation(entity.getLocation());
 
 
         //initialize reporter
