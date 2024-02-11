@@ -93,7 +93,7 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
         return entity;
     }
 
-    private String generatePassword(){
+    public static String generatePassword(){
         StringBuilder randomString = new StringBuilder(10);
         SecureRandom random = new SecureRandom();
 

@@ -1,5 +1,6 @@
 package com.bheki97.dmsspringbackend.controller;
 
+import com.bheki97.dmsspringbackend.dto.UserEntityDto;
 import com.bheki97.dmsspringbackend.entity.UserEntity;
 import com.bheki97.dmsspringbackend.service.userentitymanager.UserEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserManagerController {
 
     @Autowired
@@ -35,6 +36,18 @@ public class UserManagerController {
         System.out.println(email);
         return userManager.getUserByEmail(email);
     }
+
+
+    @GetMapping("/admin")
+    public UserEntityDto[] getAllAdmins(){
+        return userManager.getAllAdmins();
+    }
+
+    @PostMapping("/admin")
+    public UserEntityDto addNewAdmin(@RequestBody UserEntity entity){
+        return userManager.addNewAdmin(entity);
+    }
+
 
 
 

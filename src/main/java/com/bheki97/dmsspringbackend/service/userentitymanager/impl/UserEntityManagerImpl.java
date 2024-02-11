@@ -1,8 +1,10 @@
 package com.bheki97.dmsspringbackend.service.userentitymanager.impl;
 
+import com.bheki97.dmsspringbackend.dto.UserEntityDto;
 import com.bheki97.dmsspringbackend.entity.UserEntity;
 import com.bheki97.dmsspringbackend.exception.DMSException;
 import com.bheki97.dmsspringbackend.repository.UserEntityRepository;
+import com.bheki97.dmsspringbackend.service.technicianentitymanager.impl.TechnicianEntityManagerImpl;
 import com.bheki97.dmsspringbackend.service.userentitymanager.UserEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,42 @@ public class UserEntityManagerImpl implements UserEntityManager {
         return userRepository.save(entity);
     }
 
+    @Override
+    public UserEntityDto addNewAdmin(UserEntity entity) {
+
+
+        entity.setPassword(TechnicianEntityManagerImpl.generatePassword());
+        System.out.println(entity.getPassword());
+
+        checkForNullAndEmptyField(entity);
+
+        if(userRepository.existsByEmail(entity.getEmail())){
+            throw new DMSException("Account Already exists");
+        }
+        return toUserEntityDto(userRepository.save(entity));
+    }
+
+    @Override
+    public UserEntityDto[] getAllAdmins() {
+        List<UserEntityDto> list  = userRepository.findAllByUserRole("admin")
+                .stream().map(this::toUserEntityDto).toList();
+        UserEntityDto[] arr = new UserEntityDto[list.size()];
+
+        return list.toArray(arr);
+    }
+
+    private UserEntityDto toUserEntityDto(UserEntity userEntity) {
+        UserEntityDto dto = new UserEntityDto();
+
+        dto.setUserId(userEntity.getUserId());
+        dto.setFirstname(userEntity.getFirstname());
+        dto.setLastname(userEntity.getLastname());
+        dto.setCellNo(userEntity.getCellNo());
+        dto.setEmail(userEntity.getEmail());
+
+        return dto;
+    }
+
     private void checkForNullAndEmptyField(UserEntity entity) {
         if(
                 entity.getEmail()==null
@@ -44,6 +82,8 @@ public class UserEntityManagerImpl implements UserEntityManager {
             throw new DMSException("Cannot have any of the user field Empty");
         }
     }
+
+
 
     @Override
     public UserEntity getUserByEmail(String email) {
