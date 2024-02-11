@@ -23,6 +23,11 @@ public class TechnicianController {
         return technicianEntityManager.newTechnician(technician);
     }
 
+    @GetMapping("/user/{userId}")
+    public TechnicianDto getTechnicianByUserId(@PathVariable long userId){
+        return technicianEntityManager.getTechnicianByUserId(userId);
+    }
+
     @GetMapping
     public TechnicianDto[] getAllTechnicians(){
         return technicianEntityManager.getAllTechnicians();

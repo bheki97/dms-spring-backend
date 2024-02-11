@@ -7,4 +7,5 @@ import com.bheki97.dmsspringbackend.entity.TechnicianEntity;
 public interface TechnicianEntityManager {
     TechnicianDto[] newTechnician(TechnicianDto technician);
     TechnicianDto[] getAllTechnicians();
+    TechnicianDto getTechnicianByUserId(long userId);
 }

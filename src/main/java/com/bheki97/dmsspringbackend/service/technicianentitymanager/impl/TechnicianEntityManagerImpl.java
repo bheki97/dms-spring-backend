@@ -11,6 +11,7 @@ import com.bheki97.dmsspringbackend.repository.SpecialityEntityRepository;
 import com.bheki97.dmsspringbackend.repository.TechnicianEntityRepository;
 import com.bheki97.dmsspringbackend.service.technicianentitymanager.TechnicianEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -19,7 +20,7 @@ import java.util.List;
 @Service
 public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
 
-    private final static String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[]{}|;:'\",.<>?/";
+    private final static String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*+?/";
 
     @Autowired
     TechnicianEntityRepository technicianEntityRepository;
@@ -27,6 +28,8 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
     DepartmentEntityRepository departmentEntityRepository;
     @Autowired
     SpecialityEntityRepository specialityEntityRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public TechnicianDto[] newTechnician(TechnicianDto dto) {
         checkForNullAndEmptyField(dto);
@@ -42,6 +45,8 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
                 .orElseThrow(() -> new DMSException("Department does not exists"));
 
         TechnicianEntity entity = createEntity(dto,department,speciality);
+        System.out.println("new Technician password: "+entity.getUser().getPassword());
+        entity.getUser().setPassword(passwordEncoder.encode(entity.getUser().getPassword()));
         technicianEntityRepository.save(entity);
 
         return getAllTechnicians();
@@ -53,8 +58,14 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
                 .stream().map(this::toDto).toList();
         TechnicianDto[] arr = new TechnicianDto[list.size()];
 
-
         return list.toArray(arr);
+    }
+
+    @Override
+    public TechnicianDto getTechnicianByUserId(long userId) {
+
+        return toDto(technicianEntityRepository.findByUserUserId(userId)
+                .orElseThrow(() -> new DMSException("The user is not a technician")));
     }
 
     private TechnicianDto toDto(TechnicianEntity entity) {
@@ -70,7 +81,7 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
         dto.setDeptName(entity.getDepartment().getDeptName());
         dto.setSpecId(entity.getSpeciality().getSpecId());
         dto.setSpecName(entity.getSpeciality().getSpecName());
-        System.out.println(dto);
+
         return dto;
     }
 
@@ -97,7 +108,7 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
         StringBuilder randomString = new StringBuilder(10);
         SecureRandom random = new SecureRandom();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 10; i++) {
             int index = random.nextInt(CHARACTERS.length());
             randomString.append(CHARACTERS.charAt(index));
         }
