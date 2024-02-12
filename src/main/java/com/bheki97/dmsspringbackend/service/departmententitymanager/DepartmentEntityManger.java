@@ -10,4 +10,5 @@ public interface DepartmentEntityManger {
     DepartmentEntity[] addNewDepartment(DepartmentEntity entity);
     DepartmentEntity[] getAllDepartment();
     DepartmentEntity[] getAllActiveDepartment();
+    boolean toggleDepartment(long deptId);
 }

@@ -48,4 +48,15 @@ public class DepartmentEntityManagerImpl implements DepartmentEntityManger {
         DepartmentEntity[] arr = new DepartmentEntity[list.size()];
 
         return list.toArray(arr);}
+
+    @Override
+    public boolean toggleDepartment(long deptId) {
+        DepartmentEntity entity = deptRepository.findById(deptId)
+                .orElseThrow(() ->new DMSException("Department does not exist"));
+
+        entity.setActive(!entity.isActive());
+
+        deptRepository.save(entity);
+        return true;
+    }
 }

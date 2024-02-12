@@ -20,6 +20,11 @@ public class DepartmentEntityController {
         return departmentEntityManger.addNewDepartment(dept);
     }
 
+    @PutMapping("/{deptId}")
+    public boolean toggleDepartment(@PathVariable long deptId){
+        return departmentEntityManger.toggleDepartment(deptId);
+    }
+
     @GetMapping
     public DepartmentEntity[] getAllDepartments(){
         return departmentEntityManger.getAllDepartment();
