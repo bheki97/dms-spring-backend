@@ -27,6 +27,12 @@ public class DisasterEntityManagerController {
         return disasterEntityManager.reportNewDisaster(dto);
     }
 
+    @GetMapping("/{disasterId}")
+    public DisasterEntityDto getDisasterById(@PathVariable long disasterId){
+        return disasterEntityManager.getDisasterByDisasterId(disasterId);
+    }
+
+
     @PostMapping("/assign-tech")
     public boolean assignTechnician(@RequestBody AssignTechnicianDto dto){
         return disasterEntityManager.assignTechnicianToDisaster(dto);
@@ -47,7 +53,7 @@ public class DisasterEntityManagerController {
     public DisasterEntityDto[] getAllReportedDisaster(){
         return disasterEntityManager.getAllDisasters();
     }
-    @GetMapping("/{reporterId}")
+    @GetMapping("/reporter/{reporterId}")
     public DisasterEntityDto[] getAllReportedDisasterById(@PathVariable long reporterId){
         return disasterEntityManager.getAllMyReportedDisasters(reporterId);
     }
