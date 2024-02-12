@@ -14,7 +14,7 @@ public class DisasterEntityDto {
     private String latitude;
     private String imgFileName;
     private String imgFileContent;
-
+    private String location;
 
     //disaster Report Fields
     private ReporterDto reporter;

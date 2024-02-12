@@ -31,6 +31,7 @@ public class DisasterEntity {
     private String longitude;
     @Column(nullable = false)
     private String latitude;
+    private String location;
     @Column(name = "img_path",nullable = false)
     private String imgPath;
 
