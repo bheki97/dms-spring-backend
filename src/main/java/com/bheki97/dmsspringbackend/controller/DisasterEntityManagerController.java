@@ -15,6 +15,7 @@ import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/api/disaster")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class DisasterEntityManagerController {
 
     @Autowired
