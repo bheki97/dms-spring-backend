@@ -18,7 +18,7 @@ public class UserEntityManagerImpl implements UserEntityManager {
     @Override
     public UserEntity addNewUser(UserEntity entity) {
         checkForNullAndEmptyField(entity);
-
+        entity.setUserRole("user");
         if(userRepository.existsByEmail(entity.getEmail())){
             throw new DMSException("Account Already exists");
         }
@@ -32,8 +32,6 @@ public class UserEntityManagerImpl implements UserEntityManager {
                 ||entity.getEmail().isEmpty()
                 ||entity.getPassword()==null
                 ||entity.getPassword().isEmpty()
-                ||entity.getUserRole() ==null
-                ||entity.getUserRole().isEmpty()
                 ||entity.getCellNo()==null
                 ||entity.getCellNo().isEmpty()
                 ||entity.getFirstname()==null

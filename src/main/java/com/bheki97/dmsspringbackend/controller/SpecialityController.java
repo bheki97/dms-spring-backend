@@ -18,6 +18,12 @@ public class SpecialityController {
     public SpecialityEntity[] addSpeciality(@RequestBody SpecialityEntity speciality){
         return specialityEntityManager.addNewSpeciality(speciality);
     }
+
+    @PutMapping("/{specId}")
+    public boolean toggleSpeciality(@PathVariable long specId){
+        return specialityEntityManager.toggleSpeciality(specId);
+    }
+
     @GetMapping
     public SpecialityEntity[] getAllSpecialities(){
 

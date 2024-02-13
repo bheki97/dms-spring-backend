@@ -43,6 +43,18 @@ public class SpecialityEntityManagerImpl implements SpecialityEntityManager {
     }
 
     @Override
+    public boolean toggleSpeciality(long specId) {
+
+        SpecialityEntity entity = specRepository
+                .findById(specId).orElseThrow( ()->new DMSException("Speciality does not it"));
+
+        entity.setActive(!entity.isActive());
+
+        specRepository.save(entity);
+        return true;
+    }
+
+    @Override
     public SpecialityEntity[] getAllActiveSpeciality() {
 
 

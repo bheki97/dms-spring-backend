@@ -9,5 +9,7 @@ public interface SpecialityEntityManager {
 
     SpecialityEntity[] addNewSpeciality(SpecialityEntity entity);
     SpecialityEntity[] getAllSpeciality();
+
+    boolean toggleSpeciality(long specId);
     SpecialityEntity[] getAllActiveSpeciality();
 }
