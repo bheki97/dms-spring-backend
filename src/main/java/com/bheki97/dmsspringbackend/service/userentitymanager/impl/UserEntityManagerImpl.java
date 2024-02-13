@@ -5,6 +5,7 @@ import com.bheki97.dmsspringbackend.exception.DMSException;
 import com.bheki97.dmsspringbackend.repository.UserEntityRepository;
 import com.bheki97.dmsspringbackend.service.userentitymanager.UserEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public class UserEntityManagerImpl implements UserEntityManager {
 
     @Autowired
     private UserEntityRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
     public UserEntity addNewUser(UserEntity entity) {
@@ -22,6 +26,8 @@ public class UserEntityManagerImpl implements UserEntityManager {
         if(userRepository.existsByEmail(entity.getEmail())){
             throw new DMSException("Account Already exists");
         }
+
+        entity.setPassword(passwordEncoder.encode(entity.getPassword()));
 
         return userRepository.save(entity);
     }
@@ -50,7 +56,7 @@ public class UserEntityManagerImpl implements UserEntityManager {
             throw new DMSException("User does not exist");
         }
 
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).get();
     }
 
     @Override
