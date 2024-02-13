@@ -68,6 +68,13 @@ public class TechnicianEntityManagerImpl implements TechnicianEntityManager {
                 .orElseThrow(() -> new DMSException("The user is not a technician")));
     }
 
+    @Override
+    public TechnicianDto getTechnicianById(long technicianId) {
+        return toDto(technicianEntityRepository.findById(technicianId).orElseThrow(
+                ()-> new DMSException("Technician Doe not Exits")
+        ));
+    }
+
     private TechnicianDto toDto(TechnicianEntity entity) {
         TechnicianDto dto = new TechnicianDto();
 

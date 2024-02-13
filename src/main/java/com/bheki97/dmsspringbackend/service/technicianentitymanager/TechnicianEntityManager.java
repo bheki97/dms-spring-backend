@@ -8,4 +8,5 @@ public interface TechnicianEntityManager {
     TechnicianDto[] newTechnician(TechnicianDto technician);
     TechnicianDto[] getAllTechnicians();
     TechnicianDto getTechnicianByUserId(long userId);
+    TechnicianDto getTechnicianById(long technicianId);
 }
